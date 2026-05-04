@@ -1,0 +1,2077 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>kakeibo.app // All Screens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --bg: #0A0A0B;
+    --surface-1: #131315;
+    --surface-2: #1B1B1E;
+    --border: rgba(0, 230, 118, 0.08);
+    --border-strong: rgba(0, 230, 118, 0.2);
+    --border-dim: rgba(255, 255, 255, 0.05);
+    --text-1: #E8E8EA;
+    --text-2: #8A8A92;
+    --text-3: #4A4A52;
+    --accent: #00E676;
+    --accent-dim: rgba(0, 230, 118, 0.15);
+    --accent-glow: rgba(0, 230, 118, 0.1);
+    --success: #00E676;
+    --danger: #FF5757;
+    --danger-dim: rgba(255, 87, 87, 0.15);
+    --warning: #FFB800;
+    --warning-dim: rgba(255, 184, 0, 0.15);
+
+    --font-jp: 'Noto Sans JP', -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+  }
+
+  body {
+    font-family: var(--font-mono);
+    background: #1A1A1C;
+    min-height: 100vh;
+    padding: 40px 20px;
+    color: var(--text-1);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .grid-wrap {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(430px, 1fr));
+    gap: 40px;
+    max-width: 1500px;
+    margin: 0 auto;
+    justify-content: center;
+  }
+
+  .screen-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .screen-label {
+    text-align: center;
+    margin-bottom: 16px;
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    font-family: var(--font-mono);
+  }
+
+  .iphone-frame {
+    width: 430px;
+    height: 932px;
+    background: var(--bg);
+    border-radius: 50px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 0 12px #1D1D1F;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .iphone-frame::before {
+    content: '';
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 130px;
+    height: 36px;
+    background: #000;
+    border-radius: 20px;
+    z-index: 100;
+  }
+
+  .iphone-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent, transparent 2px,
+      rgba(0, 230, 118, 0.008) 2px, rgba(0, 230, 118, 0.008) 3px
+    );
+    pointer-events: none;
+    z-index: 99;
+  }
+
+  .status-bar {
+    height: 47px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 28px;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text-1);
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+  }
+
+  .status-bar-right { display: flex; gap: 5px; align-items: center; }
+  .screen { flex: 1; overflow-y: auto; overflow-x: hidden; padding-bottom: 100px; }
+  .screen::-webkit-scrollbar { display: none; }
+
+  /* Bottom Nav */
+  .bottom-nav {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 88px;
+    background: rgba(10, 10, 11, 0.92);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border-strong);
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding-top: 8px;
+    padding-bottom: 34px;
+    z-index: 50;
+  }
+
+  .nav-item {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 4px;
+    color: var(--text-3);
+    cursor: pointer;
+    padding: 4px 12px;
+    font-family: var(--font-mono);
+  }
+
+  .nav-item.active { color: var(--accent); }
+  .nav-item svg { width: 22px; height: 22px; }
+  .nav-item span {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .nav-item.fab {
+    background: var(--accent);
+    color: #0A0A0B;
+    width: 52px; height: 52px;
+    border-radius: 12px;
+    margin-top: -10px;
+    box-shadow: 0 0 30px rgba(0, 230, 118, 0.5), inset 0 0 0 1px rgba(255,255,255,0.2);
+    justify-content: center;
+    padding: 0;
+  }
+
+  .nav-item.fab span { display: none; }
+  .nav-item.fab svg { width: 24px; height: 24px; }
+
+  /* Terminal Prompt */
+  .terminal-prompt {
+    padding: 12px 20px 4px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-3);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-bottom: 1px solid var(--border-dim);
+    margin-bottom: 16px;
+  }
+
+  .terminal-prompt .prompt-user { color: var(--accent); font-weight: 600; }
+  .terminal-prompt .prompt-host { color: var(--text-2); }
+  .terminal-prompt .prompt-path { color: var(--warning); }
+  .terminal-prompt .prompt-cursor {
+    width: 7px; height: 12px;
+    background: var(--accent);
+    margin-left: 4px;
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+
+  /* Header (input screens) */
+  .input-header {
+    padding: 8px 16px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-dim);
+    margin-bottom: 8px;
+  }
+
+  .header-back, .header-close {
+    width: 36px; height: 36px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-strong);
+    display: flex;
+    align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--accent);
+  }
+
+  .header-back svg, .header-close svg { width: 16px; height: 16px; }
+
+  .header-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-1);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .header-title::before { content: '['; color: var(--accent); }
+  .header-title::after { content: ']'; color: var(--accent); }
+
+  .header-save {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 8px 14px;
+    cursor: pointer;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent);
+    font-family: var(--font-mono);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* Form Sections */
+  .form-section { padding: 0 16px; margin-bottom: 16px; }
+
+  .form-label {
+    font-size: 10px;
+    color: var(--text-2);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    padding: 0 4px;
+    font-family: var(--font-mono);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .form-label::before { content: '//'; color: var(--accent); font-weight: 400; }
+
+  /* Field row */
+  .field-row {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    font-family: var(--font-mono);
+  }
+
+  .field-row-label {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .field-row-value {
+    font-size: 12px;
+    color: var(--text-1);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+  }
+
+  .field-row-value svg {
+    width: 12px; height: 12px;
+    color: var(--accent);
+  }
+
+  /* Memo */
+  .memo-textarea {
+    width: 100%;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: var(--text-1);
+    resize: none;
+    min-height: 70px;
+    outline: none;
+    line-height: 1.5;
+  }
+
+  .memo-textarea:focus { border-color: var(--accent); }
+  .memo-textarea::placeholder { color: var(--text-3); }
+
+  /* Save button */
+  .save-button {
+    margin: 24px 16px 12px;
+    width: calc(100% - 32px);
+    padding: 14px;
+    background: var(--accent);
+    color: #0A0A0B;
+    border: none;
+    font-size: 13px;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    box-shadow: 0 0 24px rgba(0, 230, 118, 0.3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .save-button::before { content: '$ '; color: rgba(10, 10, 11, 0.5); }
+
+  .delete-button {
+    margin: 16px 16px 12px;
+    width: calc(100% - 32px);
+    padding: 14px;
+    background: transparent;
+    color: var(--danger);
+    border: 1px solid var(--danger);
+    font-size: 13px;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .delete-button::before { content: '$ rm '; color: rgba(255, 87, 87, 0.6); }
+
+  /* Card Logo */
+  .card-logo {
+    width: 32px; height: 32px;
+    display: flex;
+    align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-weight: 800;
+    font-size: 9px;
+    color: white;
+    font-family: var(--font-mono);
+  }
+
+  .card-logo.large { width: 40px; height: 40px; font-size: 10px; }
+  .card-logo.rakuten { background: linear-gradient(135deg, #BF0000, #8B0000); }
+  .card-logo.smbc { background: linear-gradient(135deg, #00984A, #007339); }
+  .card-logo.paypay { background: linear-gradient(135deg, #FF0033, #C8002A); }
+  .card-logo.cash { background: linear-gradient(135deg, #4A4A52, #2C2C32); }
+
+  /* Chips */
+  .chip-container {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 0 16px 4px 16px;
+    margin: 0 -16px;
+    scrollbar-width: none;
+  }
+  .chip-container::-webkit-scrollbar { display: none; }
+
+  .chip {
+    flex-shrink: 0;
+    padding: 8px 12px;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+    font-family: var(--font-mono);
+  }
+
+  .chip-emoji { font-size: 13px; }
+
+  .chip.active {
+    background: var(--accent);
+    color: #0A0A0B;
+    border-color: var(--accent);
+  }
+
+  /* === Card Selection Screen === */
+  .search-bar {
+    margin: 0 16px 16px;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .search-bar svg { width: 14px; height: 14px; color: var(--text-3); }
+
+  .search-bar input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-1);
+    font-size: 12px;
+    font-family: var(--font-mono);
+  }
+
+  .search-bar input::placeholder { color: var(--text-3); }
+
+  .card-select-list {
+    margin: 0 16px;
+  }
+
+  .card-select-item {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    margin-bottom: 8px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .card-select-item:hover { border-color: var(--border-strong); }
+
+  .card-select-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .card-select-info { flex: 1; }
+
+  .card-select-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-1);
+    font-family: var(--font-mono);
+  }
+
+  .card-select-usage {
+    font-size: 10px;
+    color: var(--text-3);
+    margin-top: 2px;
+    font-family: var(--font-mono);
+  }
+
+  .card-select-usage strong { color: var(--text-1); font-weight: 700; }
+
+  .card-select-stores {
+    display: flex;
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border-strong);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .card-select-stores::-webkit-scrollbar { display: none; }
+
+  .store-chip {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    min-width: 50px;
+  }
+
+  .store-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--surface-2);
+    border: 1px solid var(--border-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .store-name {
+    font-size: 9px;
+    color: var(--text-2);
+    font-weight: 600;
+    font-family: var(--font-mono);
+  }
+
+  .store-multiplier {
+    font-size: 9px;
+    color: var(--accent);
+    font-weight: 800;
+    font-family: var(--font-mono);
+  }
+
+  /* === Income Screen === */
+  .amount-display {
+    padding: 12px 20px 24px;
+    text-align: center;
+    position: relative;
+  }
+
+  .amount-display::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, var(--accent-glow), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .amount-prefix {
+    font-size: 9px;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    margin-bottom: 8px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    position: relative;
+  }
+
+  .amount-prefix::before {
+    content: '$ INPUT_AMOUNT > ';
+    color: var(--text-3);
+    font-weight: 400;
+  }
+
+  .amount-input-wrapper {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .amount-currency {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: var(--font-mono);
+  }
+
+  .amount-input {
+    font-size: 56px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--text-1);
+    border: none;
+    outline: none;
+    background: transparent;
+    text-align: center;
+    width: auto;
+    min-width: 120px;
+    max-width: 320px;
+    font-family: var(--font-mono);
+  }
+
+  .account-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .account-row {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .account-row.active {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .account-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--surface-2);
+    border: 1px solid var(--border-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-2);
+  }
+
+  .account-row.active .account-icon { color: var(--accent); border-color: var(--border-strong); }
+
+  .account-info { flex: 1; }
+
+  .account-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-1);
+    font-family: var(--font-mono);
+  }
+
+  .account-balance {
+    font-size: 10px;
+    color: var(--text-3);
+    margin-top: 2px;
+    font-family: var(--font-mono);
+  }
+
+  /* === Transfer Screen === */
+  .transfer-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+    padding: 0 16px;
+  }
+
+  .transfer-card {
+    background: var(--surface-1);
+    border: 1px solid var(--border-strong);
+    padding: 16px;
+    position: relative;
+  }
+
+  .transfer-card-label {
+    position: absolute;
+    top: -7px;
+    left: 14px;
+    font-size: 9px;
+    color: var(--accent);
+    background: var(--bg);
+    padding: 0 6px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    font-family: var(--font-mono);
+  }
+
+  .transfer-card-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .transfer-arrow {
+    align-self: center;
+    color: var(--accent);
+    font-size: 20px;
+    padding: 4px 0;
+  }
+
+  /* === Installment Calc === */
+  .calc-preview {
+    background: var(--surface-1);
+    border: 1px solid var(--accent);
+    box-shadow: 0 0 20px var(--accent-glow);
+    padding: 16px;
+    margin: 0 16px;
+    position: relative;
+  }
+
+  .calc-preview::before {
+    content: '[CALCULATED]';
+    position: absolute;
+    top: -7px;
+    left: 12px;
+    font-size: 9px;
+    color: var(--accent);
+    background: var(--bg);
+    padding: 0 6px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    font-family: var(--font-mono);
+  }
+
+  .calc-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+
+  .calc-row span:first-child {
+    color: var(--text-3);
+    font-weight: 600;
+  }
+
+  .calc-row span:last-child {
+    color: var(--text-1);
+    font-weight: 700;
+  }
+
+  .calc-row.highlight {
+    border-top: 1px dashed var(--border-strong);
+    margin-top: 4px;
+    padding-top: 10px;
+    font-size: 13px;
+  }
+
+  .calc-row.highlight span:last-child {
+    color: var(--accent);
+    font-weight: 800;
+  }
+
+  .calc-row.future {
+    border-top: 1px dashed var(--border-strong);
+    margin-top: 4px;
+    padding-top: 10px;
+    font-size: 11px;
+  }
+
+  .calc-row.future span:last-child {
+    color: var(--warning);
+    font-weight: 700;
+  }
+
+  /* === Wishlist === */
+  .wishlist-item {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    margin: 0 16px 8px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+  }
+
+  .wishlist-image {
+    width: 60px;
+    height: 60px;
+    background: var(--surface-2);
+    border: 1px solid var(--border-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+
+  .wishlist-info { flex: 1; min-width: 0; }
+
+  .wishlist-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-1);
+    font-family: var(--font-mono);
+  }
+
+  .wishlist-price {
+    font-size: 14px;
+    color: var(--accent);
+    font-weight: 800;
+    margin-top: 4px;
+    font-family: var(--font-mono);
+  }
+
+  .wishlist-priority {
+    font-size: 9px;
+    padding: 2px 6px;
+    border: 1px solid currentColor;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
+    margin-top: 4px;
+    display: inline-block;
+  }
+
+  .wishlist-priority.high { color: var(--danger); background: var(--danger-dim); }
+  .wishlist-priority.mid { color: var(--warning); background: var(--warning-dim); }
+  .wishlist-priority.low { color: var(--text-2); background: rgba(255,255,255,0.05); }
+
+  .wishlist-arrow { color: var(--accent); }
+  .wishlist-arrow svg { width: 16px; height: 16px; }
+
+  /* === Revo Repayment === */
+  .revo-card {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    margin: 0 16px 8px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .revo-card.active {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .revo-info { flex: 1; }
+
+  .revo-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-1);
+    font-family: var(--font-mono);
+  }
+
+  .revo-debt {
+    font-size: 11px;
+    color: var(--danger);
+    font-weight: 700;
+    margin-top: 4px;
+    font-family: var(--font-mono);
+  }
+
+  .revo-rate {
+    font-size: 11px;
+    color: var(--warning);
+    font-weight: 700;
+    font-family: var(--font-mono);
+  }
+
+  /* Repayment type toggle */
+  .repay-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .repay-option {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-1);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .repay-option.active {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+    color: var(--accent);
+  }
+
+  /* === Transaction List === */
+  .month-header {
+    padding: 8px 16px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .month-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-1);
+    font-family: var(--font-mono);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .month-title::before { content: '>'; color: var(--accent); }
+
+  .summary-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1px;
+    margin: 0 16px 16px;
+    background: var(--border-strong);
+    border: 1px solid var(--border-strong);
+  }
+
+  .summary-cell {
+    background: var(--surface-1);
+    padding: 10px;
+    text-align: center;
+  }
+
+  .summary-cell-label {
+    font-size: 9px;
+    color: var(--text-3);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
+    margin-bottom: 4px;
+  }
+
+  .summary-cell-value {
+    font-size: 13px;
+    font-weight: 800;
+    font-family: var(--font-mono);
+  }
+
+  .summary-cell-value.income { color: var(--accent); }
+  .summary-cell-value.expense { color: var(--danger); }
+  .summary-cell-value.net { color: var(--text-1); }
+
+  .filter-bar {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 0 16px 12px;
+    scrollbar-width: none;
+  }
+
+  .filter-bar::-webkit-scrollbar { display: none; }
+
+  .day-group {
+    margin: 0 16px 12px;
+  }
+
+  .day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 12px 0 8px;
+    font-family: var(--font-mono);
+  }
+
+  .day-date {
+    font-size: 11px;
+    color: var(--text-2);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .day-date::before { content: '## '; color: var(--accent); }
+
+  .day-total {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 600;
+  }
+
+  .transaction-list {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+  }
+
+  .transaction-item {
+    padding: 11px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border-dim);
+    cursor: pointer;
+  }
+
+  .transaction-item:last-child { border-bottom: none; }
+  .transaction-item:active { background: var(--surface-2); }
+
+  .transaction-icon {
+    width: 32px; height: 32px;
+    display: flex;
+    align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 14px;
+    background: var(--surface-2);
+    border: 1px solid var(--border-dim);
+  }
+
+  .transaction-info { flex: 1; min-width: 0; }
+
+  .transaction-category {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-1);
+    font-family: var(--font-mono);
+  }
+
+  .transaction-meta {
+    font-size: 10px;
+    color: var(--text-3);
+    margin-top: 2px;
+    font-family: var(--font-mono);
+  }
+
+  .transaction-meta::before { content: '└ '; }
+
+  .transaction-amount {
+    font-size: 13px;
+    font-weight: 800;
+    text-align: right;
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+  }
+
+  .transaction-amount.expense { color: var(--danger); }
+  .transaction-amount.income { color: var(--accent); }
+  .transaction-amount.transfer { color: var(--text-2); }
+
+  /* === Modal === */
+  .modal-screen {
+    background: var(--bg);
+    border-top: 2px solid var(--accent);
+    box-shadow: 0 -10px 40px rgba(0, 230, 118, 0.15);
+  }
+
+  .modal-handle {
+    width: 60px; height: 4px;
+    background: var(--text-3);
+    border-radius: 2px;
+    margin: 8px auto;
+  }
+
+  .detail-amount {
+    text-align: center;
+    padding: 24px 16px 28px;
+    border-bottom: 1px solid var(--border-dim);
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .detail-amount-label {
+    font-size: 9px;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    margin-bottom: 8px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+  }
+
+  .detail-amount-label::before { content: '$ '; color: var(--text-3); }
+
+  .detail-amount-value {
+    font-size: 56px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    font-family: var(--font-mono);
+    color: var(--danger);
+  }
+
+  .detail-amount-value.income { color: var(--accent); }
+
+  .detail-list {
+    margin: 0 16px;
+  }
+
+  .detail-row {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    cursor: pointer;
+  }
+
+  .detail-row-label {
+    font-size: 10px;
+    color: var(--text-3);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: var(--font-mono);
+  }
+
+  .detail-row-label::before { content: '> '; color: var(--accent); }
+
+  .detail-row-value {
+    font-size: 12px;
+    color: var(--text-1);
+    font-weight: 600;
+    font-family: var(--font-mono);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* === Settings === */
+  .settings-section {
+    margin: 16px;
+  }
+
+  .settings-section-title {
+    font-size: 10px;
+    color: var(--text-2);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    padding: 0 4px;
+    font-family: var(--font-mono);
+  }
+
+  .settings-section-title::before { content: '## '; color: var(--accent); }
+
+  .settings-list {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+  }
+
+  .settings-item {
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border-dim);
+    cursor: pointer;
+  }
+
+  .settings-item:last-child { border-bottom: none; }
+
+  .settings-icon {
+    width: 28px; height: 28px;
+    background: var(--surface-2);
+    border: 1px solid var(--border-dim);
+    display: flex;
+    align-items: center; justify-content: center;
+    color: var(--accent);
+  }
+
+  .settings-icon svg { width: 14px; height: 14px; }
+
+  .settings-label {
+    flex: 1;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-1);
+    font-family: var(--font-mono);
+  }
+
+  .settings-value {
+    font-size: 11px;
+    color: var(--text-3);
+    font-family: var(--font-mono);
+  }
+
+  .settings-arrow { color: var(--text-3); }
+  .settings-arrow svg { width: 12px; height: 12px; }
+
+  /* Toggle Switch */
+  .toggle {
+    width: 40px; height: 22px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .toggle.on {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+  }
+
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background: var(--text-2);
+    border-radius: 50%;
+    transition: all 0.2s;
+  }
+
+  .toggle.on::after {
+    left: 20px;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  /* Selected card */
+  .selected-card-display {
+    background: var(--surface-1);
+    border: 1px solid var(--border-strong);
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .selected-card-display::before {
+    content: '[SELECTED]';
+    position: absolute;
+    top: -7px;
+    left: 8px;
+    font-size: 8px;
+    color: var(--accent);
+    background: var(--bg);
+    padding: 0 4px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    font-family: var(--font-mono);
+  }
+
+  .selected-card-info { flex: 1; }
+  .selected-card-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-1);
+    font-family: var(--font-mono);
+  }
+
+  .selected-card-meta {
+    font-size: 10px;
+    color: var(--text-3);
+    margin-top: 4px;
+    font-family: var(--font-mono);
+  }
+
+  .selected-card-change {
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+  }
+
+  .selected-card-change::before { content: '> '; }
+
+  /* Mobile */
+  @media (max-width: 1400px) {
+    .grid-wrap { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 900px) {
+    body { padding: 20px 10px; }
+    .iphone-frame { width: min(430px, calc(100vw - 60px)); height: auto; min-height: 932px; aspect-ratio: 430 / 932; }
+  }
+</style>
+</head>
+<body>
+
+<svg style="display: none;">
+  <defs>
+    <symbol id="icon-bell" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></symbol>
+    <symbol id="icon-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/><path fill="none" stroke="currentColor" stroke-width="2" d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+    <symbol id="icon-plus" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.5" d="M5 12h14M12 5v14"/></symbol>
+    <symbol id="icon-back" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.5" d="M15 18l-6-6 6-6"/></symbol>
+    <symbol id="icon-close" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.5" d="M18 6L6 18M6 6l12 12"/></symbol>
+    <symbol id="icon-chevron-right" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.5" d="M9 18l6-6-6-6"/></symbol>
+    <symbol id="icon-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path fill="none" stroke="currentColor" stroke-width="2" d="m21 21-4.3-4.3"/></symbol>
+    <symbol id="icon-filter" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></symbol>
+    <symbol id="icon-cash" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.5" d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></symbol>
+    <symbol id="icon-bank" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.5" d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/></symbol>
+    <symbol id="icon-stock" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.5" d="M3 3v18h18M7 14l4-4 4 4 5-5"/></symbol>
+    <symbol id="icon-card" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/><path fill="none" stroke="currentColor" stroke-width="2.5" d="M3 12h18M7 16h2"/></symbol>
+    <symbol id="icon-card-thin" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path fill="none" stroke="currentColor" stroke-width="1.5" d="M2 11h20M6 16h2"/></symbol>
+    <symbol id="icon-arrow-up" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.5" d="M12 19V5M5 12l7-7 7 7"/></symbol>
+    <symbol id="icon-arrow-down" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.5" d="M12 5v14M5 12l7 7 7-7"/></symbol>
+    <symbol id="icon-transfer" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.5" d="M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"/></symbol>
+    <symbol id="icon-home" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM9 22V12h6v10"/></symbol>
+    <symbol id="icon-list" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M8 6h13M8 12h13M8 18h13M3 6h0M3 12h0M3 18h0"/></symbol>
+    <symbol id="icon-chart" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M3 3v18h18M7 14l4-4 4 4 5-5"/></symbol>
+    <symbol id="icon-user" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="icon-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3" fill="none" stroke="currentColor" stroke-width="2"/><path fill="none" stroke="currentColor" stroke-width="2" d="M3 5v14a9 3 0 0 0 18 0V5M3 12a9 3 0 0 0 18 0"/></symbol>
+    <symbol id="icon-refresh" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M23 4v6h-6M1 20v-6h6"/><path fill="none" stroke="currentColor" stroke-width="2" d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></symbol>
+    <symbol id="icon-bell-bold" viewBox="0 0 24 24"><path fill="currentColor" d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0z"/></symbol>
+    <symbol id="icon-moon" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+    <symbol id="icon-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path fill="none" stroke="currentColor" stroke-width="2" d="M12 16v-4M12 8h.01"/></symbol>
+  </defs>
+</svg>
+
+
+<div class="grid-wrap">
+
+  <!-- ============================================
+       03. CARD SELECTION
+       ============================================ -->
+  <div class="screen-container">
+    <div class="screen-label">// 03_CARD_SELECT.tsx</div>
+    <div class="iphone-frame">
+      <div class="status-bar"><span>9:41</span><div class="status-bar-right"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="6" width="3" height="6" rx="1"/><rect x="5" y="3" width="3" height="9" rx="1"/><rect x="10" y="0" width="3" height="12" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none" stroke="currentColor"><rect x="1" y="1" width="20" height="10" rx="2.5"/><rect x="3" y="3" width="16" height="6" rx="1" fill="currentColor"/><rect x="22" y="4" width="2" height="4" rx="0.5" fill="currentColor"/></svg></div></div>
+      <div class="screen">
+        <div class="terminal-prompt"><span class="prompt-user">user</span><span class="prompt-host">@kakeibo</span><span style="color: var(--text-3);">:</span><span class="prompt-path">~/cards</span><span style="color: var(--accent); font-weight: 700;">$</span><span style="color: var(--text-2);">select</span><span class="prompt-cursor"></span></div>
+        <div class="input-header">
+          <div class="header-back"><svg><use href="#icon-back"/></svg></div>
+          <div class="header-title">card_select</div>
+          <div style="width:36px"></div>
+        </div>
+
+        <div class="search-bar">
+          <svg><use href="#icon-search"/></svg>
+          <input placeholder="// search cards..." />
+        </div>
+
+        <div class="card-select-list">
+          <div class="card-select-item">
+            <div class="card-select-header">
+              <div class="card-logo large rakuten">楽天</div>
+              <div class="card-select-info">
+                <div class="card-select-name">楽天カード</div>
+                <div class="card-select-usage">今月: <strong>¥42,000</strong> / ¥100,000</div>
+              </div>
+              <svg width="16" height="16" style="color: var(--accent);"><use href="#icon-chevron-right"/></svg>
+            </div>
+            <div class="card-select-stores">
+              <div class="store-chip"><div class="store-icon">🍔</div><div class="store-name">マック</div><div class="store-multiplier">×3.0</div></div>
+              <div class="store-chip"><div class="store-icon">🛒</div><div class="store-name">楽天市場</div><div class="store-multiplier">×5.0</div></div>
+              <div class="store-chip"><div class="store-icon">🏪</div><div class="store-name">ファミマ</div><div class="store-multiplier">×2.0</div></div>
+              <div class="store-chip"><div class="store-icon">⛽</div><div class="store-name">ENEOS</div><div class="store-multiplier">×2.0</div></div>
+            </div>
+          </div>
+
+          <div class="card-select-item">
+            <div class="card-select-header">
+              <div class="card-logo large smbc">SMBC</div>
+              <div class="card-select-info">
+                <div class="card-select-name">三井住友カード</div>
+                <div class="card-select-usage">今月: <strong>¥37,500</strong> / ¥50,000</div>
+              </div>
+              <svg width="16" height="16" style="color: var(--accent);"><use href="#icon-chevron-right"/></svg>
+            </div>
+            <div class="card-select-stores">
+              <div class="store-chip"><div class="store-icon">☕</div><div class="store-name">スタバ</div><div class="store-multiplier">×5.0</div></div>
+              <div class="store-chip"><div class="store-icon">🏪</div><div class="store-name">セブン</div><div class="store-multiplier">×5.0</div></div>
+              <div class="store-chip"><div class="store-icon">🍔</div><div class="store-name">マック</div><div class="store-multiplier">×5.0</div></div>
+            </div>
+          </div>
+
+          <div class="card-select-item">
+            <div class="card-select-header">
+              <div class="card-logo large paypay">PayPay</div>
+              <div class="card-select-info">
+                <div class="card-select-name">PayPayカード</div>
+                <div class="card-select-usage">今月: <strong>¥9,000</strong> / ¥50,000</div>
+              </div>
+              <svg width="16" height="16" style="color: var(--accent);"><use href="#icon-chevron-right"/></svg>
+            </div>
+            <div class="card-select-stores">
+              <div class="store-chip"><div class="store-icon">🛒</div><div class="store-name">Yahoo</div><div class="store-multiplier">×3.0</div></div>
+              <div class="store-chip"><div class="store-icon">📦</div><div class="store-name">ZOZO</div><div class="store-multiplier">×2.0</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item"><svg><use href="#icon-home"/></svg><span>home</span></div>
+        <div class="nav-item"><svg><use href="#icon-list"/></svg><span>logs</span></div>
+        <div class="nav-item fab"><svg><use href="#icon-plus"/></svg></div>
+        <div class="nav-item"><svg><use href="#icon-chart"/></svg><span>stats</span></div>
+        <div class="nav-item"><svg><use href="#icon-user"/></svg><span>conf</span></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================
+       04. INCOME INPUT
+       ============================================ -->
+  <div class="screen-container">
+    <div class="screen-label">// 04_INCOME_INPUT.tsx</div>
+    <div class="iphone-frame">
+      <div class="status-bar"><span>9:41</span><div class="status-bar-right"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="6" width="3" height="6" rx="1"/><rect x="5" y="3" width="3" height="9" rx="1"/><rect x="10" y="0" width="3" height="12" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none" stroke="currentColor"><rect x="1" y="1" width="20" height="10" rx="2.5"/><rect x="3" y="3" width="16" height="6" rx="1" fill="currentColor"/><rect x="22" y="4" width="2" height="4" rx="0.5" fill="currentColor"/></svg></div></div>
+      <div class="screen">
+        <div class="terminal-prompt"><span class="prompt-user">user</span><span class="prompt-host">@kakeibo</span><span style="color: var(--text-3);">:</span><span class="prompt-path">~/income/new</span><span style="color: var(--accent); font-weight: 700;">$</span><span style="color: var(--text-2);">add</span><span class="prompt-cursor"></span></div>
+        <div class="input-header">
+          <div class="header-back"><svg><use href="#icon-back"/></svg></div>
+          <div class="header-title">income_record</div>
+          <button class="header-save">save</button>
+        </div>
+
+        <div class="amount-display">
+          <div class="amount-prefix">amount</div>
+          <div class="amount-input-wrapper">
+            <span class="amount-currency">¥</span>
+            <input type="text" class="amount-input" value="300,000" />
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-label">category / カテゴリ</div>
+          <div class="chip-container">
+            <div class="chip active"><span class="chip-emoji">💰</span>給与</div>
+            <div class="chip"><span class="chip-emoji">🎁</span>ボーナス</div>
+            <div class="chip"><span class="chip-emoji">💼</span>副収入</div>
+            <div class="chip"><span class="chip-emoji">✨</span>臨時収入</div>
+            <div class="chip">…</div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-label">target_account / 入金先</div>
+          <div class="account-list">
+            <div class="account-row active">
+              <div class="account-icon"><svg width="16" height="16"><use href="#icon-bank"/></svg></div>
+              <div class="account-info">
+                <div class="account-name">三井住友銀行</div>
+                <div class="account-balance">残高: ¥1,234,567</div>
+              </div>
+            </div>
+            <div class="account-row">
+              <div class="account-icon"><svg width="16" height="16"><use href="#icon-bank"/></svg></div>
+              <div class="account-info">
+                <div class="account-name">住信SBI銀行</div>
+                <div class="account-balance">残高: ¥567,890</div>
+              </div>
+            </div>
+            <div class="account-row">
+              <div class="account-icon"><svg width="16" height="16"><use href="#icon-stock"/></svg></div>
+              <div class="account-info">
+                <div class="account-name">楽天証券</div>
+                <div class="account-balance">残高: ¥890,123</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-label">datetime / 入金日</div>
+          <div class="field-row">
+            <span class="field-row-label">timestamp</span>
+            <span class="field-row-value">2026-04-25 09:00<svg><use href="#icon-chevron-right"/></svg></span>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-label">memo / メモ</div>
+          <textarea class="memo-textarea" placeholder="// 任意のメモを入力">4月分給与</textarea>
+        </div>
+
+        <button class="save-button">commit transaction</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================
+       05. TRANSFER INPUT
+       ============================================ -->
+  <div class="screen-container">
+    <div class="screen-label">// 05_TRANSFER.tsx</div>
+    <div class="iphone-frame">
+      <div class="status-bar"><span>9:41</span><div class="status-bar-right"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="6" width="3" height="6" rx="1"/><rect x="5" y="3" width="3" height="9" rx="1"/><rect x="10" y="0" width="3" height="12" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none" stroke="currentColor"><rect x="1" y="1" width="20" height="10" rx="2.5"/><rect x="3" y="3" width="16" height="6" rx="1" fill="currentColor"/><rect x="22" y="4" width="2" height="4" rx="0.5" fill="currentColor"/></svg></div></div>
+      <div class="screen">
+        <div class="terminal-prompt"><span class="prompt-user">user</span><span class="prompt-host">@kakeibo</span><span style="color: var(--text-3);">:</span><span class="prompt-path">~/transfer</span><span style="color: var(--accent); font-weight: 700;">$</span><span style="color: var(--text-2);">create</span><span class="prompt-cursor"></span></div>
+        <div class="input-header">
+          <div class="header-back"><svg><use href="#icon-back"/></svg></div>
+          <div class="header-title">transfer</div>
+          <button class="header-save">save</button>
+        </div>
+
+        <div class="amount-display">
+          <div class="amount-prefix">amount</div>
+          <div class="amount-input-wrapper">
+            <span class="amount-currency">¥</span>
+            <input type="text" class="amount-input" value="50,000" />
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-label">flow / 振替フロー</div>
+          <div class="transfer-flow">
+            <div class="transfer-card">
+              <div class="transfer-card-label">[FROM] 振替元</div>
+              <div class="transfer-card-content">
+                <div class="account-icon"><svg width="16" height="16"><use href="#icon-bank"/></svg></div>
+                <div class="account-info">
+                  <div class="account-name">三井住友銀行</div>
+                  <div class="account-balance">残高: ¥1,234,567</div>
+                </div>
+                <svg width="14" height="14" style="color: var(--accent);"><use href="#icon-chevron-right"/></svg>
+              </div>
+            </div>
+            <div class="transfer-arrow">↓</div>
+            <div class="transfer-card">
+              <div class="transfer-card-label">[TO] 振替先</div>
+              <div class="transfer-card-content">
+                <div class="account-icon"><svg width="16" height="16"><use href="#icon-stock"/></svg></div>
+                <div class="account-info">
+                  <div class="account-name">楽天証券</div>
+                  <div class="account-balance">残高: ¥890,123</div>
+                </div>
+                <svg width="14" height="14" style="color: var(--accent);"><use href="#icon-chevron-right"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-label">fee / 手数料</div>
+          <div class="field-row">
+            <span class="field-row-label">amount</span>
+            <span class="field-row-value">¥0</span>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-label">datetime / 実行日</div>
+          <div class="field-row">
+            <span class="field-row-label">timestamp</span>
+            <span class="field-row-value">2026-04-19 10:00<svg><use href="#icon-chevron-right"/></svg></span>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-label">memo / メモ</div>
+          <textarea class="memo-textarea" placeholder="// 任意のメモを入力">投資資金移動</textarea>
+        </div>
+
+        <button class="save-button">commit transfer</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================
+       06. INSTALLMENT INPUT
+       ============================================ -->
+  <div class="screen-container">
+    <div class="screen-label">// 06_INSTALLMENT.tsx</div>
+    <div class="iphone-frame">
+      <div class="status-bar"><span>9:41</span><div class="status-bar-right"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="6" width="3" height="6" rx="1"/><rect x="5" y="3" width="3" height="9" rx="1"/><rect x="10" y="0" width="3" height="12" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none" stroke="currentColor"><rect x="1" y="1" width="20" height="10" rx="2.5"/><rect x="3" y="3" width="16" height="6" rx="1" fill="currentColor"/><rect x="22" y="4" width="2" height="4" rx="0.5" fill="currentColor"/></svg></div></div>
+      <div class="screen">
+        <div class="terminal-prompt"><span class="prompt-user">user</span><span class="prompt-host">@kakeibo</span><span style="color: var(--text-3);">:</span><span class="prompt-path">~/installment</span><span style="color: var(--accent); font-weight: 700;">$</span><span style="color: var(--text-2);">create</span><span class="prompt-cursor"></span></div>
+        <div class="input-header">
+          <div class="header-back"><svg><use href="#icon-back"/></svg></div>
+          <div class="header-title">installment</div>
+          <button class="header-save">save</button>
+        </div>
+
+        <div class="form-section">
+          <div class="form-label">item / 商品名</div>
+          <textarea class="memo-textarea" style="min-height:50px" placeholder="// 商品名を入力">iPad Pro 11インチ M4</textarea>
+        </div>
+
+        <div class="amount-display" style="padding:8px 20px 16px">
+          <div class="amount-prefix">total_amount</div>
+          <div class="amount-input-wrapper">
+            <span class="amount-currency">¥</span>
+            <input type="text" class="amount-input" value="100,000" style="font-size:48px" />
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-label">card / 使用カード</div>
+          <div class="selected-card-display">
+            <div class="card-logo large rakuten">楽天</div>
+            <div class="selected-card-info">
+              <div class="selected-card-name">楽天カード</div>
+              <div class="selected-card-meta">分割手数料率: 14.50%（10回）</div>
+            </div>
+            <span class="selected-card-change">change</span>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-label">months / 分割回数</div>
+          <div class="chip-container">
+            <div class="chip">3回</div>
+            <div class="chip">5回</div>
+            <div class="chip">6回</div>
+            <div class="chip active">10回</div>
+            <div class="chip">12回</div>
+            <div class="chip">15回</div>
+            <div class="chip">20回</div>
+            <div class="chip">24回</div>
+          </div>
+        </div>
+
+        <div style="height: 12px"></div>
+
+        <div class="calc-preview">
+          <div class="calc-row"><span>// principal</span><span>¥100,000</span></div>
+          <div class="calc-row"><span>// fee_rate</span><span>14.50%</span></div>
+          <div class="calc-row"><span>// total_fee</span><span>¥12,083</span></div>
+          <div class="calc-row highlight"><span>monthly_payment</span><span>¥11,208</span></div>
+          <div class="calc-row future"><span>completion</span><span>2027-04</span></div>
+        </div>
+
+        <div class="form-section" style="margin-top:16px">
+          <div class="form-label">first_month / 初回支払月</div>
+          <div class="field-row">
+            <span class="field-row-label">month</span>
+            <span class="field-row-value">2026-05<svg><use href="#icon-chevron-right"/></svg></span>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-label">category / カテゴリ</div>
+          <div class="chip-container">
+            <div class="chip active"><span class="chip-emoji">💻</span>家電</div>
+            <div class="chip"><span class="chip-emoji">🛒</span>食料品</div>
+            <div class="chip"><span class="chip-emoji">👕</span>衣服</div>
+            <div class="chip">…</div>
+          </div>
+        </div>
+
+        <button class="save-button">commit installment</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================
+       07. WISHLIST
+       ============================================ -->
+  <div class="screen-container">
+    <div class="screen-label">// 07_WISHLIST.tsx</div>
+    <div class="iphone-frame">
+      <div class="status-bar"><span>9:41</span><div class="status-bar-right"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="6" width="3" height="6" rx="1"/><rect x="5" y="3" width="3" height="9" rx="1"/><rect x="10" y="0" width="3" height="12" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none" stroke="currentColor"><rect x="1" y="1" width="20" height="10" rx="2.5"/><rect x="3" y="3" width="16" height="6" rx="1" fill="currentColor"/><rect x="22" y="4" width="2" height="4" rx="0.5" fill="currentColor"/></svg></div></div>
+      <div class="screen">
+        <div class="terminal-prompt"><span class="prompt-user">user</span><span class="prompt-host">@kakeibo</span><span style="color: var(--text-3);">:</span><span class="prompt-path">~/wishlist</span><span style="color: var(--accent); font-weight: 700;">$</span><span style="color: var(--text-2);">ls -al</span><span class="prompt-cursor"></span></div>
+        <div class="input-header">
+          <div class="header-back"><svg><use href="#icon-back"/></svg></div>
+          <div class="header-title">wishlist</div>
+          <div style="width:36px"></div>
+        </div>
+
+        <div class="form-section">
+          <div class="chip-container">
+            <div class="chip active">all</div>
+            <div class="chip">priority: high</div>
+            <div class="chip">priority: mid</div>
+            <div class="chip">priority: low</div>
+          </div>
+        </div>
+
+        <div class="wishlist-item">
+          <div class="wishlist-image">🎧</div>
+          <div class="wishlist-info">
+            <div class="wishlist-name">Airpods Pro 2</div>
+            <div class="wishlist-price">¥39,800</div>
+            <span class="wishlist-priority high">[!] HIGH</span>
+          </div>
+          <div class="wishlist-arrow"><svg><use href="#icon-chevron-right"/></svg></div>
+        </div>
+
+        <div class="wishlist-item">
+          <div class="wishlist-image">⌨️</div>
+          <div class="wishlist-info">
+            <div class="wishlist-name">HHKB キーボード</div>
+            <div class="wishlist-price">¥35,000</div>
+            <span class="wishlist-priority mid">[~] MID</span>
+          </div>
+          <div class="wishlist-arrow"><svg><use href="#icon-chevron-right"/></svg></div>
+        </div>
+
+        <div class="wishlist-item">
+          <div class="wishlist-image">📚</div>
+          <div class="wishlist-info">
+            <div class="wishlist-name">技術書3冊セット</div>
+            <div class="wishlist-price">¥12,000</div>
+            <span class="wishlist-priority mid">[~] MID</span>
+          </div>
+          <div class="wishlist-arrow"><svg><use href="#icon-chevron-right"/></svg></div>
+        </div>
+
+        <div class="wishlist-item">
+          <div class="wishlist-image">🎮</div>
+          <div class="wishlist-info">
+            <div class="wishlist-name">PS5 Slim</div>
+            <div class="wishlist-price">¥66,980</div>
+            <span class="wishlist-priority low">[ ] LOW</span>
+          </div>
+          <div class="wishlist-arrow"><svg><use href="#icon-chevron-right"/></svg></div>
+        </div>
+
+        <div class="wishlist-item">
+          <div class="wishlist-image">👟</div>
+          <div class="wishlist-info">
+            <div class="wishlist-name">スニーカー</div>
+            <div class="wishlist-price">¥18,000</div>
+            <span class="wishlist-priority low">[ ] LOW</span>
+          </div>
+          <div class="wishlist-arrow"><svg><use href="#icon-chevron-right"/></svg></div>
+        </div>
+
+        <div style="text-align:center; margin-top:16px; font-size:11px; color:var(--text-3); font-family:var(--font-mono);">
+          // 5 items · total: ¥171,780<br>
+          <span style="color:var(--accent);">→ manage in notion</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================
+       08. REVO REPAYMENT
+       ============================================ -->
+  <div class="screen-container">
+    <div class="screen-label">// 08_REVO_REPAY.tsx</div>
+    <div class="iphone-frame">
+      <div class="status-bar"><span>9:41</span><div class="status-bar-right"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="6" width="3" height="6" rx="1"/><rect x="5" y="3" width="3" height="9" rx="1"/><rect x="10" y="0" width="3" height="12" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none" stroke="currentColor"><rect x="1" y="1" width="20" height="10" rx="2.5"/><rect x="3" y="3" width="16" height="6" rx="1" fill="currentColor"/><rect x="22" y="4" width="2" height="4" rx="0.5" fill="currentColor"/></svg></div></div>
+      <div class="screen">
+        <div class="terminal-prompt"><span class="prompt-user">user</span><span class="prompt-host">@kakeibo</span><span style="color: var(--text-3);">:</span><span class="prompt-path">~/revo/pay</span><span style="color: var(--accent); font-weight: 700;">$</span><span style="color: var(--text-2);">repay</span><span class="prompt-cursor"></span></div>
+        <div class="input-header">
+          <div class="header-back"><svg><use href="#icon-back"/></svg></div>
+          <div class="header-title">revo_repay</div>
+          <button class="header-save">save</button>
+        </div>
+
+        <div class="form-section">
+          <div class="form-label">target / 対象リボ</div>
+          <div class="revo-card active">
+            <div class="card-logo large rakuten">楽天</div>
+            <div class="revo-info">
+              <div class="revo-name">楽天カードリボ</div>
+              <div class="revo-debt">残債: ¥40,625</div>
+            </div>
+            <div class="revo-rate">15.0%</div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-label">type / 返済種別</div>
+          <div class="repay-toggle">
+            <div class="repay-option active">通常返済</div>
+            <div class="repay-option">繰り上げ</div>
+          </div>
+        </div>
+
+        <div class="amount-display">
+          <div class="amount-prefix">payment_amount</div>
+          <div class="amount-input-wrapper">
+            <span class="amount-currency">¥</span>
+            <input type="text" class="amount-input" value="10,000" />
+          </div>
+        </div>
+
+        <div class="calc-preview">
+          <div class="calc-row"><span>// current_debt</span><span>¥40,625</span></div>
+          <div class="calc-row"><span>// interest</span><span style="color:var(--warning)">¥508</span></div>
+          <div class="calc-row"><span>// principal</span><span>¥9,492</span></div>
+          <div class="calc-row highlight"><span>after_debt</span><span>¥31,133</span></div>
+        </div>
+
+        <div class="form-section" style="margin-top:16px">
+          <div class="form-label">date / 返済日</div>
+          <div class="field-row">
+            <span class="field-row-label">date</span>
+            <span class="field-row-value">2026-04-27<svg><use href="#icon-chevron-right"/></svg></span>
+          </div>
+        </div>
+
+        <button class="save-button">commit repayment</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================
+       09. TRANSACTION LIST
+       ============================================ -->
+  <div class="screen-container">
+    <div class="screen-label">// 09_LOGS.tsx</div>
+    <div class="iphone-frame">
+      <div class="status-bar"><span>9:41</span><div class="status-bar-right"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="6" width="3" height="6" rx="1"/><rect x="5" y="3" width="3" height="9" rx="1"/><rect x="10" y="0" width="3" height="12" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none" stroke="currentColor"><rect x="1" y="1" width="20" height="10" rx="2.5"/><rect x="3" y="3" width="16" height="6" rx="1" fill="currentColor"/><rect x="22" y="4" width="2" height="4" rx="0.5" fill="currentColor"/></svg></div></div>
+      <div class="screen">
+        <div class="terminal-prompt"><span class="prompt-user">user</span><span class="prompt-host">@kakeibo</span><span style="color: var(--text-3);">:</span><span class="prompt-path">~/logs/2026-04</span><span style="color: var(--accent); font-weight: 700;">$</span><span style="color: var(--text-2);">tail</span><span class="prompt-cursor"></span></div>
+
+        <div class="month-header">
+          <div class="month-title">2026.04</div>
+          <div style="display:flex;gap:6px">
+            <div class="header-back"><svg><use href="#icon-search"/></svg></div>
+            <div class="header-back"><svg><use href="#icon-filter"/></svg></div>
+          </div>
+        </div>
+
+        <div class="summary-bar">
+          <div class="summary-cell">
+            <div class="summary-cell-label">income</div>
+            <div class="summary-cell-value income">+¥300K</div>
+          </div>
+          <div class="summary-cell">
+            <div class="summary-cell-label">expense</div>
+            <div class="summary-cell-value expense">−¥183K</div>
+          </div>
+          <div class="summary-cell">
+            <div class="summary-cell-label">net</div>
+            <div class="summary-cell-value net">+¥117K</div>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <div class="chip active">all</div>
+          <div class="chip">income</div>
+          <div class="chip">expense</div>
+          <div class="chip">transfer</div>
+          <div class="chip">installment</div>
+        </div>
+
+        <div class="day-group">
+          <div class="day-header">
+            <span class="day-date">2026-04-19 (Fri)</span>
+            <span class="day-total">−¥4,500</span>
+          </div>
+          <div class="transaction-list">
+            <div class="transaction-item">
+              <div class="transaction-icon">🍔</div>
+              <div class="transaction-info">
+                <div class="transaction-category">食費 / 外食</div>
+                <div class="transaction-meta">マクドナルド · 楽天カード</div>
+              </div>
+              <div class="transaction-amount expense">−¥1,500</div>
+            </div>
+            <div class="transaction-item">
+              <div class="transaction-icon">🚃</div>
+              <div class="transaction-info">
+                <div class="transaction-category">交通費</div>
+                <div class="transaction-meta">PASMO · 現金</div>
+              </div>
+              <div class="transaction-amount expense">−¥3,000</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="day-group">
+          <div class="day-header">
+            <span class="day-date">2026-04-18 (Thu)</span>
+            <span class="day-total">−¥4,280</span>
+          </div>
+          <div class="transaction-list">
+            <div class="transaction-item">
+              <div class="transaction-icon">🛒</div>
+              <div class="transaction-info">
+                <div class="transaction-category">食費 / 食料品</div>
+                <div class="transaction-meta">スーパー · PayPayカード</div>
+              </div>
+              <div class="transaction-amount expense">−¥4,280</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="day-group">
+          <div class="day-header">
+            <span class="day-date">2026-04-15 (Mon)</span>
+            <span class="day-total">+¥298,500</span>
+          </div>
+          <div class="transaction-list">
+            <div class="transaction-item">
+              <div class="transaction-icon">💰</div>
+              <div class="transaction-info">
+                <div class="transaction-category">給与</div>
+                <div class="transaction-meta">4月分給与 · 三井住友銀行</div>
+              </div>
+              <div class="transaction-amount income">+¥300,000</div>
+            </div>
+            <div class="transaction-item">
+              <div class="transaction-icon">🔄</div>
+              <div class="transaction-info">
+                <div class="transaction-category">振替</div>
+                <div class="transaction-meta">SMBC銀行 → 楽天証券</div>
+              </div>
+              <div class="transaction-amount transfer">¥1,500</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item"><svg><use href="#icon-home"/></svg><span>home</span></div>
+        <div class="nav-item active"><svg><use href="#icon-list"/></svg><span>logs</span></div>
+        <div class="nav-item fab"><svg><use href="#icon-plus"/></svg></div>
+        <div class="nav-item"><svg><use href="#icon-chart"/></svg><span>stats</span></div>
+        <div class="nav-item"><svg><use href="#icon-user"/></svg><span>conf</span></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================
+       10. TRANSACTION DETAIL (MODAL)
+       ============================================ -->
+  <div class="screen-container">
+    <div class="screen-label">// 10_DETAIL.tsx (modal)</div>
+    <div class="iphone-frame">
+      <div class="status-bar"><span>9:41</span><div class="status-bar-right"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="6" width="3" height="6" rx="1"/><rect x="5" y="3" width="3" height="9" rx="1"/><rect x="10" y="0" width="3" height="12" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none" stroke="currentColor"><rect x="1" y="1" width="20" height="10" rx="2.5"/><rect x="3" y="3" width="16" height="6" rx="1" fill="currentColor"/><rect x="22" y="4" width="2" height="4" rx="0.5" fill="currentColor"/></svg></div></div>
+      <div class="screen" style="background:rgba(0,0,0,0.5);padding-top:200px">
+        <div class="modal-screen" style="border-radius: 20px 20px 0 0; padding-bottom: 16px;">
+          <div class="modal-handle"></div>
+          <div class="input-header" style="border-bottom:none;padding-bottom:0">
+            <button class="header-save" style="background:transparent;border:1px solid var(--text-3);color:var(--text-2)">cancel</button>
+            <div class="header-title">detail</div>
+            <button class="header-save">save</button>
+          </div>
+
+          <div class="detail-amount">
+            <div class="detail-amount-label">expense_amount</div>
+            <div class="detail-amount-value">−¥1,500</div>
+          </div>
+
+          <div class="detail-list">
+            <div class="detail-row">
+              <span class="detail-row-label">category</span>
+              <span class="detail-row-value">食費 / 外食 <svg width="12" height="12"><use href="#icon-chevron-right"/></svg></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-row-label">payment</span>
+              <span class="detail-row-value">
+                <div class="card-logo rakuten" style="width:20px;height:20px;font-size:7px">楽天</div>
+                楽天カード
+              </span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-row-label">memo</span>
+              <span class="detail-row-value">マクドナルド</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-row-label">datetime</span>
+              <span class="detail-row-value">2026-04-19 14:30</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-row-label">source</span>
+              <span class="detail-row-value" style="color:var(--text-3)">[manual]</span>
+            </div>
+          </div>
+
+          <button class="delete-button">delete transaction</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================
+       11. SETTINGS
+       ============================================ -->
+  <div class="screen-container">
+    <div class="screen-label">// 11_CONF.tsx</div>
+    <div class="iphone-frame">
+      <div class="status-bar"><span>9:41</span><div class="status-bar-right"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="6" width="3" height="6" rx="1"/><rect x="5" y="3" width="3" height="9" rx="1"/><rect x="10" y="0" width="3" height="12" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none" stroke="currentColor"><rect x="1" y="1" width="20" height="10" rx="2.5"/><rect x="3" y="3" width="16" height="6" rx="1" fill="currentColor"/><rect x="22" y="4" width="2" height="4" rx="0.5" fill="currentColor"/></svg></div></div>
+      <div class="screen">
+        <div class="terminal-prompt"><span class="prompt-user">user</span><span class="prompt-host">@kakeibo</span><span style="color: var(--text-3);">:</span><span class="prompt-path">~/.config</span><span style="color: var(--accent); font-weight: 700;">$</span><span style="color: var(--text-2);">edit</span><span class="prompt-cursor"></span></div>
+
+        <div class="month-header">
+          <div class="month-title">conf</div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-title">data</div>
+          <div class="settings-list">
+            <div class="settings-item">
+              <div class="settings-icon"><svg><use href="#icon-database"/></svg></div>
+              <div class="settings-label">manage in notion</div>
+              <div class="settings-arrow"><svg><use href="#icon-chevron-right"/></svg></div>
+            </div>
+            <div class="settings-item">
+              <div class="settings-icon"><svg><use href="#icon-refresh"/></svg></div>
+              <div class="settings-label">refresh data</div>
+              <div class="settings-value">last: 5min ago</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-title">notifications</div>
+          <div class="settings-list">
+            <div class="settings-item">
+              <div class="settings-icon"><svg><use href="#icon-bell-bold"/></svg></div>
+              <div class="settings-label">monthly summary</div>
+              <div class="toggle on"></div>
+            </div>
+            <div class="settings-item">
+              <div class="settings-icon"><svg><use href="#icon-bell-bold"/></svg></div>
+              <div class="settings-label">weekly summary</div>
+              <div class="toggle"></div>
+            </div>
+            <div class="settings-item">
+              <div class="settings-icon"><svg><use href="#icon-bell-bold"/></svg></div>
+              <div class="settings-label">notify time</div>
+              <div class="settings-value">09:00</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-title">display</div>
+          <div class="settings-list">
+            <div class="settings-item">
+              <div class="settings-icon"><svg><use href="#icon-moon"/></svg></div>
+              <div class="settings-label">dark mode</div>
+              <div class="toggle on"></div>
+            </div>
+            <div class="settings-item">
+              <div class="settings-icon"><svg><use href="#icon-cash"/></svg></div>
+              <div class="settings-label">currency</div>
+              <div class="settings-value">JPY (¥)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-title">about</div>
+          <div class="settings-list">
+            <div class="settings-item">
+              <div class="settings-icon"><svg><use href="#icon-info"/></svg></div>
+              <div class="settings-label">version</div>
+              <div class="settings-value">v1.0.0</div>
+            </div>
+            <div class="settings-item">
+              <div class="settings-icon"><svg><use href="#icon-info"/></svg></div>
+              <div class="settings-label">privacy policy</div>
+              <div class="settings-arrow"><svg><use href="#icon-chevron-right"/></svg></div>
+            </div>
+            <div class="settings-item">
+              <div class="settings-icon"><svg><use href="#icon-info"/></svg></div>
+              <div class="settings-label">licenses</div>
+              <div class="settings-arrow"><svg><use href="#icon-chevron-right"/></svg></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align:center;margin-top:24px;font-size:10px;color:var(--text-3);font-family:var(--font-mono)">
+          // kakeibo.app · powered by notion<br>
+          // built with cloudflare workers
+        </div>
+
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item"><svg><use href="#icon-home"/></svg><span>home</span></div>
+        <div class="nav-item"><svg><use href="#icon-list"/></svg><span>logs</span></div>
+        <div class="nav-item fab"><svg><use href="#icon-plus"/></svg></div>
+        <div class="nav-item"><svg><use href="#icon-chart"/></svg><span>stats</span></div>
+        <div class="nav-item active"><svg><use href="#icon-user"/></svg><span>conf</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.chip-container').forEach(container => {
+    container.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        container.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+      });
+    });
+  });
+
+  document.querySelectorAll('.repay-toggle').forEach(t => {
+    t.querySelectorAll('.repay-option').forEach(o => {
+      o.addEventListener('click', () => {
+        t.querySelectorAll('.repay-option').forEach(x => x.classList.remove('active'));
+        o.classList.add('active');
+      });
+    });
+  });
+
+  document.querySelectorAll('.toggle').forEach(t => {
+    t.addEventListener('click', () => t.classList.toggle('on'));
+  });
+</script>
+
+</body>
+</html>
