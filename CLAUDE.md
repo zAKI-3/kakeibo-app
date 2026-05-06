@@ -46,14 +46,16 @@ Notion DB (19 tables)
 - [x] Notion DB構築（19テーブル）
 - [x] API設計
 - [x] デザイン作成（全11画面プロトタイプ）
-- [ ] **Phase 1: Cloudflare Workers基盤構築** ← 次にここから
-- [ ] Phase 2: 読み取り系API実装
-- [ ] Phase 3: 書き込み系API実装
-- [ ] Phase 4: 編集・削除API実装
-- [ ] Phase 5: Cron自動化実装
-- [ ] フロントエンドHTML/JS実装
-- [ ] PWA化（manifest.json + Service Worker）
-- [ ] GitHub Pagesデプロイ
+- [x] **Phase 1: Cloudflare Workers基盤構築**
+- [x] Phase 2: 読み取り系API実装
+- [x] Phase 3: 書き込み系API実装
+- [x] Phase 4: 編集・削除API実装
+- [x] Phase 5: Cron自動化実装（固定費・ローン返済・カード引き落とし）
+- [x] フロントエンドHTML/JS実装（SPA、全11画面相当）
+- [x] PWA化（manifest.json + Service Worker）
+- [x] GitHub Pages自動デプロイ設定（.github/workflows/deploy.yml）
+- [ ] Cloudflare Workers デプロイ（wrangler deploy）← 次にここ
+- [ ] GitHub リポジトリ作成 → push → Pages 有効化
 - [ ] iPhone実機テスト
 
 ## プロジェクト構成（推奨）
@@ -142,18 +144,26 @@ kakeibo-app/
 最初のセッションでは、以下の作業をおすすめします。
 
 ```
-1. docs/ 配下を全部読んで、プロジェクトの全体像を把握する
-2. Cloudflare Workers のプロジェクトを api/ 配下にセットアップする
-   - wrangler init で初期化
-   - Honoフレームワークを追加
-   - TypeScriptで設定
-3. 環境変数の設定を確認
-   - NOTION_TOKEN（Notion API用）
-   - NOTION_DB_*（各DB ID、docs/notion-db-ids.json参照）
-   - API_KEY（フロント↔Workers認証用、新規生成）
-4. 最小限のヘルスチェックエンドポイント実装
-   - GET /api/health
-   - 動作確認後、コミット
+【実装はすべて完了】次のセッションでやること：
+
+1. Cloudflare Workers のデプロイ
+   cd api/
+   wrangler secret put NOTION_TOKEN    # Notion APIキーをセット
+   wrangler secret put API_KEY         # 任意の文字列をAPIキーとしてセット
+   wrangler deploy
+
+2. GitHub リポジトリを作成して push
+   git remote add origin https://github.com/<user>/kakeibo-app.git
+   git push -u origin main
+
+3. GitHub Pages を有効化
+   Settings > Pages > Source: GitHub Actions
+
+4. Web アプリの設定画面で API 情報を入力
+   - API URL: https://kakeibo-api.<subdomain>.workers.dev
+   - API KEY: 上でセットした API_KEY の値
+
+5. iPhone Safari でアクセスしてホーム画面に追加 → PWA化
 ```
 
 ## 開発時の確認事項

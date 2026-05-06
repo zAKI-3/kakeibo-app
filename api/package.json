@@ -1,0 +1,23 @@
+{
+  "name": "kakeibo-api",
+  "version": "1.0.0",
+  "description": "Cloudflare Workers API for Kakeibo PWA",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "start": "wrangler dev",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": ["cloudflare", "workers", "hono", "notion"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "hono": "^4.3.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240403.0",
+    "typescript": "^5.4.5",
+    "wrangler": "^3.51.0"
+  }
+}

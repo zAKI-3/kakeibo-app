@@ -1,0 +1,10 @@
+# ローカル開発用の環境変数テンプレート
+# このファイルを .dev.vars にコピーして、実際の値を設定してください
+
+# Notion Integration Token
+# https://www.notion.so/my-integrations で作成
+NOTION_TOKEN=secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# API認証キー（フロント↔Workers間の簡易認証）
+# 任意の文字列を生成して設定（例: openssl rand -base64 32）
+API_KEY=your_generated_api_key_here
