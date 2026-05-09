@@ -27,13 +27,11 @@ dashboard.get('/', async (c) => {
 
   // 並列取得：今月スナップショット・今月取引・支払方法（カード）
   const [snapshotRes, txRes, paymentRes] = await Promise.all([
-    // 今月のスナップショット
+    // 今月のスナップショット（年月はtitle型: "2026-05" 形式）
     notion.queryDatabase(c.env.NOTION_DB_MONTHLY_SNAPSHOT, {
       filter: {
-        and: [
-          { property: '年月', date: { on_or_after: startDate } },
-          { property: '年月', date: { on_or_before: endDate } },
-        ],
+        property: '年月',
+        title: { equals: month },
       },
       pageSize: 1,
     }),
@@ -70,7 +68,7 @@ dashboard.get('/', async (c) => {
       fixedExpenses:
       (NotionProperty.number(sp['来月支払固定費合計']) ?? 0) +
       (NotionProperty.number(sp['来月支払ローン合計']) ?? 0) +
-      (NotionProperty.number(sp['来月支払リボ額（手動）']) ?? 0) +
+      (NotionProperty.number(sp['来月支払リボ額']) ?? 0) +
       (NotionProperty.number(sp['目標貯金額']) ?? 0),
     }
   }
@@ -113,7 +111,7 @@ dashboard.get('/', async (c) => {
       datetime: NotionProperty.date(p['日時']),
       type: NotionProperty.select(p['種別']),
       amount: NotionProperty.number(p['金額']),
-      categoryIds: NotionProperty.relation(p['カテゴリ（小）']),
+      categoryIds: NotionProperty.relation(p['カテゴリ']),
       paymentMethodIds: NotionProperty.relation(p['支払方法']),
       memo: NotionProperty.richText(p['メモ']),
     }

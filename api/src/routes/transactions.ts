@@ -19,7 +19,7 @@ function pageToTransaction(page: any) {
     type: NotionProperty.select(p['種別']),
     amount: NotionProperty.number(p['金額']),
     paymentMethodIds: NotionProperty.relation(p['支払方法']),
-    categoryIds: NotionProperty.relation(p['カテゴリ（小）']),
+    categoryIds: NotionProperty.relation(p['カテゴリ']),
     source: NotionProperty.select(p['記録元']),
     installmentProgress: NotionProperty.richText(p['分割進捗']),
     memo: NotionProperty.richText(p['メモ']),
@@ -140,7 +140,7 @@ transactions.post('/', async (c) => {
   }
 
   if (paymentMethodId) properties['支払方法'] = toNotionProperty.relation([paymentMethodId])
-  if (categoryId) properties['カテゴリ（小）'] = toNotionProperty.relation([categoryId])
+  if (categoryId) properties['カテゴリ'] = toNotionProperty.relation([categoryId])
   if (memo) properties['メモ'] = toNotionProperty.richText(memo)
 
   const page = await notion.createPage(c.env.NOTION_DB_TRANSACTIONS, properties)
@@ -168,7 +168,7 @@ transactions.patch('/:id', async (c) => {
   }
   if (amount != null) properties['金額'] = toNotionProperty.number(amount)
   if (paymentMethodId) properties['支払方法'] = toNotionProperty.relation([paymentMethodId])
-  if (categoryId) properties['カテゴリ（小）'] = toNotionProperty.relation([categoryId])
+  if (categoryId) properties['カテゴリ'] = toNotionProperty.relation([categoryId])
   if (memo !== undefined) properties['メモ'] = toNotionProperty.richText(memo)
 
   if (Object.keys(properties).length === 0) {

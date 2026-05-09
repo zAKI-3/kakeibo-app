@@ -48,10 +48,8 @@ snapshot.post('/', async (c) => {
     }),
     notion.queryDatabase(c.env.NOTION_DB_SAVING_GOALS, {
       filter: {
-        and: [
-          { property: '年月', date: { on_or_after: startDate } },
-          { property: '年月', date: { on_or_before: endDate } },
-        ],
+        property: '年月',
+        title: { equals: yearMonth },
       },
       pageSize: 1,
     }),
@@ -80,14 +78,14 @@ snapshot.post('/', async (c) => {
     salaryAmount - nextFixedCostsTotal - nextLoansTotal - revoPayment - savingsGoal
 
   const properties: Record<string, any> = {
-    '年月': toNotionProperty.date(startDate),
+    '年月': toNotionProperty.title(yearMonth),
     '給料額': toNotionProperty.number(salaryAmount),
     '給料入金日': toNotionProperty.date(salaryDate),
     '来月支払固定費合計': toNotionProperty.number(nextFixedCostsTotal),
     '来月支払ローン合計': toNotionProperty.number(nextLoansTotal),
-    '来月支払リボ額（手動）': toNotionProperty.number(revoPayment),
+    '来月支払リボ額': toNotionProperty.number(revoPayment),
     '目標貯金額': toNotionProperty.number(savingsGoal),
-    'クレカ利用可能額（初期）': toNotionProperty.number(initialAvailable),
+    'クレカ利用可能額初期': toNotionProperty.number(initialAvailable),
     '現在の利用可能残高': toNotionProperty.number(initialAvailable),
   }
 

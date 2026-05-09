@@ -34,7 +34,8 @@ transfer.post('/', async (c) => {
   }
 
   const properties: Record<string, any> = {
-    '日時': toNotionProperty.date(datetime),
+    '日時': toNotionProperty.title(datetime),
+    '実行日': toNotionProperty.date(datetime),
     '振替元口座': toNotionProperty.relation([fromAccountId]),
     '振替先口座': toNotionProperty.relation([toAccountId]),
     '金額': toNotionProperty.number(amount),

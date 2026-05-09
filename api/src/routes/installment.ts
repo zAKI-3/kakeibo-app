@@ -98,7 +98,7 @@ installment.post('/', async (c) => {
       '紐づく分割払い': toNotionProperty.relation([installmentPage.id]),
       '分割進捗': toNotionProperty.richText(`${i + 1}/${months}`),
     }
-    if (categoryId) txProperties['カテゴリ（小）'] = toNotionProperty.relation([categoryId])
+    if (categoryId) txProperties['カテゴリ'] = toNotionProperty.relation([categoryId])
     if (memo) txProperties['メモ'] = toNotionProperty.richText(`${name}（${i + 1}/${months}回目）`)
 
     const txPage = await notion.createPage(c.env.NOTION_DB_TRANSACTIONS, txProperties)

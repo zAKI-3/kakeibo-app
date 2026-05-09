@@ -150,7 +150,7 @@ cron.post('/daily', async (c) => {
           props['支払方法'] = toNotionProperty.relation([paymentMethodIds[0]])
         }
         if (categoryIds.length > 0) {
-          props['カテゴリ（小）'] = toNotionProperty.relation([categoryIds[0]])
+          props['カテゴリ'] = toNotionProperty.relation([categoryIds[0]])
         }
         if (memo || fcName) {
           props['メモ'] = toNotionProperty.richText(fcName || memo)

@@ -84,7 +84,7 @@ wishlist.post('/:id/purchase', async (c) => {
     NotionProperty.relation(wishlistPage.properties['カテゴリ'])[0] ||
     null
 
-  if (resolvedCategoryId) txProperties['カテゴリ（小）'] = toNotionProperty.relation([resolvedCategoryId])
+  if (resolvedCategoryId) txProperties['カテゴリ'] = toNotionProperty.relation([resolvedCategoryId])
 
   const txMemo = memo || itemName
   if (txMemo) txProperties['メモ'] = toNotionProperty.richText(txMemo)
