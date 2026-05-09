@@ -27,6 +27,15 @@
 
 html, body { height: 100%; overflow: hidden; background: #000; }
 
+/* iPhoneセーフエリア対応（viewport-fit=cover 時の余白防止） */
+html {
+  min-height: calc(100% + env(safe-area-inset-top));
+  padding: env(safe-area-inset-top)
+           env(safe-area-inset-right)
+           env(safe-area-inset-bottom)
+           env(safe-area-inset-left);
+}
+
 body {
   font-family: var(--font-mono);
   background: var(--bg);
@@ -641,7 +650,16 @@ textarea.field-input {
 
   /* 問題2: ボトムナビを画面最下部にぴったり沿わせる */
   .bottom-nav {
-    height: calc(60px + env(safe-area-inset-bottom));
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: auto;
     padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* スクロールコンテンツがボトムナビに隠れないよう余白確保 */
+  .screen {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
   }
 }
