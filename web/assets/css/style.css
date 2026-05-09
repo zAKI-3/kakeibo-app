@@ -621,3 +621,27 @@ textarea.field-input {
   font-weight: 600;
   display: flex; align-items: center; gap: 6px;
 }
+
+/* ===== PWA Standalone Mode ===== */
+@media (display-mode: standalone) {
+  /* 問題1: アプリ内ステータスバーを非表示（iOSのが表示されるため二重になる） */
+  .status-bar {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* ステータスバーの代わりに #app がセーフエリア上端を確保 */
+  #app {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  /* 問題2: ボトムナビを画面最下部にぴったり沿わせる */
+  .bottom-nav {
+    height: calc(60px + env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
