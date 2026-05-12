@@ -962,7 +962,8 @@ async function pickAccount(mode) {
 
 async function pickCategory(type) {
   try {
-    const { categories } = await API.cached(`cat-${type}`, 300000, () => API.getCategories(type))
+    const level = type === 'income' ? 'large' : 'small'
+    const { categories } = await API.cached(`cat-${type}`, 300000, () => API.getCategories(type, level))
     const items = categories.map(c => ({ label: c.name, emoji: c.icon, id: c.id }))
     showPicker('カテゴリ', items, item => {
       if (currentRoute === 'expense') {

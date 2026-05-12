@@ -83,8 +83,8 @@ async function getAccounts() {
   return request('/api/master/accounts')
 }
 
-async function getCategories(type = 'all') {
-  return request(`/api/master/categories?type=${type}&level=small`)
+async function getCategories(type = 'all', level = 'small') {
+  return request(`/api/master/categories?type=${type}&level=${level}`)
 }
 
 async function getCardPerks(cardId = '') {
