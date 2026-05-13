@@ -664,7 +664,10 @@ async function showPicker(title, items, onSelect) {
   overlay.innerHTML = `
     <div class="modal-sheet">
       <div class="modal-handle"></div>
-      <div style="padding:12px 20px 8px;font-size:13px;font-weight:700;color:var(--text-1);border-bottom:1px solid var(--border-dim)">[${title}]</div>
+      <div style="padding:12px 20px 8px;font-size:13px;font-weight:700;color:var(--text-1);border-bottom:1px solid var(--border-dim);display:flex;justify-content:space-between;align-items:center">
+        <span>[${title}]</span>
+        <span data-close style="cursor:pointer;color:var(--text-2);font-size:20px;line-height:1;padding:0 4px">×</span>
+      </div>
       <div class="picker-list">
         ${items.map((it, i) => `
           <div class="picker-item" data-index="${i}">
@@ -682,7 +685,7 @@ async function showPicker(title, items, onSelect) {
     if (item) {
       onSelect(items[parseInt(item.dataset.index)])
       document.body.removeChild(overlay)
-    } else if (e.target === overlay) {
+    } else if (e.target.closest('[data-close]') || e.target === overlay) {
       document.body.removeChild(overlay)
     }
   })
