@@ -567,6 +567,8 @@ textarea.field-input {
   border-bottom: 1px solid var(--border-dim);
   cursor: pointer;
   display: flex; align-items: center; gap: 12px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 .picker-item:active { background: var(--surface-1); }
 .picker-item.selected { color: var(--accent); }

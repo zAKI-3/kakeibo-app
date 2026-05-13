@@ -677,7 +677,7 @@ async function showPicker(title, items, onSelect) {
 
   const closeBtn = document.createElement('button')
   closeBtn.textContent = '×'
-  closeBtn.style.cssText = 'background:none;border:none;cursor:pointer;color:var(--text-2);font-size:20px;line-height:1;padding:4px 8px'
+  closeBtn.style.cssText = 'background:none;border:none;cursor:pointer;color:var(--text-2);font-size:20px;line-height:1;padding:4px 8px;touch-action:manipulation;-webkit-tap-highlight-color:transparent'
   closeBtn.addEventListener('click', close)
   header.appendChild(closeBtn)
 
