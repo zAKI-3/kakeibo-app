@@ -73,7 +73,6 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   padding-bottom: 100px;
-  -webkit-overflow-scrolling: touch;
 }
 .screen::-webkit-scrollbar { display: none; }
 
@@ -227,6 +226,8 @@ body {
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 .field-row-label {
   font-size: 11px; color: var(--text-3);
@@ -320,6 +321,8 @@ textarea.field-input {
   display: flex; align-items: center; gap: 5px;
   white-space: nowrap;
   -webkit-appearance: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 .chip.active {
   background: var(--accent);
@@ -399,6 +402,8 @@ textarea.field-input {
   display: flex; align-items: center; gap: 12px;
   border-bottom: 1px solid var(--border-dim);
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 .transaction-item:last-child { border-bottom: none; }
 .transaction-item:active { background: var(--surface-2); }
@@ -521,6 +526,8 @@ textarea.field-input {
   display: flex; align-items: center; gap: 10px;
   cursor: pointer;
   -webkit-appearance: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 .quick-action-btn svg { width: 18px; height: 18px; color: var(--accent); }
 .quick-action-label {
@@ -550,7 +557,6 @@ textarea.field-input {
   border-top: 2px solid var(--accent);
   box-shadow: 0 -10px 40px rgba(0, 230, 118, 0.15);
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
 }
 .modal-sheet::-webkit-scrollbar { display: none; }
 .modal-handle {
