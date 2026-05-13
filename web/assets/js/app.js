@@ -659,37 +659,45 @@ function renderSettings() {
 
 // ===== Picker Sheets =====
 async function showPicker(title, items, onSelect) {
+  const close = () => document.body.removeChild(overlay)
+
   const overlay = document.createElement('div')
   overlay.className = 'modal-overlay'
-  overlay.innerHTML = `
-    <div class="modal-sheet">
-      <div class="modal-handle"></div>
-      <div style="padding:12px 20px 8px;font-size:13px;font-weight:700;color:var(--text-1);border-bottom:1px solid var(--border-dim);display:flex;justify-content:space-between;align-items:center">
-        <span>[${title}]</span>
-        <button data-close style="background:none;border:none;cursor:pointer;color:var(--text-2);font-size:20px;line-height:1;padding:4px 8px">×</button>
-      </div>
-      <div class="picker-list">
-        ${items.map((it, i) => `
-          <div class="picker-item" data-index="${i}">
-            ${it.emoji ? `<span style="font-size:18px">${it.emoji}</span>` : ''}
-            <div>
-              <div class="picker-label">${it.label}</div>
-              ${it.sub ? `<div class="picker-sub">${it.sub}</div>` : ''}
-            </div>
-          </div>`).join('')}
-      </div>
-    </div>`
+  overlay.addEventListener('click', e => { if (e.target === overlay) close() })
 
-  overlay.querySelector('[data-close]').addEventListener('click', () => document.body.removeChild(overlay))
-  overlay.addEventListener('click', e => {
-    const item = e.target.closest('[data-index]')
-    if (item) {
-      onSelect(items[parseInt(item.dataset.index)])
-      document.body.removeChild(overlay)
-    } else if (e.target === overlay) {
-      document.body.removeChild(overlay)
-    }
+  const sheet = document.createElement('div')
+  sheet.className = 'modal-sheet'
+
+  const handle = document.createElement('div')
+  handle.className = 'modal-handle'
+
+  const header = document.createElement('div')
+  header.style.cssText = 'padding:12px 20px 8px;font-size:13px;font-weight:700;color:var(--text-1);border-bottom:1px solid var(--border-dim);display:flex;justify-content:space-between;align-items:center'
+  header.innerHTML = `<span>[${title}]</span>`
+
+  const closeBtn = document.createElement('button')
+  closeBtn.textContent = '×'
+  closeBtn.style.cssText = 'background:none;border:none;cursor:pointer;color:var(--text-2);font-size:20px;line-height:1;padding:4px 8px'
+  closeBtn.addEventListener('click', close)
+  header.appendChild(closeBtn)
+
+  const list = document.createElement('div')
+  list.className = 'picker-list'
+  items.forEach(it => {
+    const row = document.createElement('div')
+    row.className = 'picker-item'
+    row.innerHTML = `
+      ${it.emoji ? `<span style="font-size:18px">${it.emoji}</span>` : ''}
+      <div>
+        <div class="picker-label">${it.label}</div>
+        ${it.sub ? `<div class="picker-sub">${it.sub}</div>` : ''}
+      </div>`
+    row.addEventListener('click', () => { onSelect(it); close() })
+    list.appendChild(row)
   })
+
+  sheet.append(handle, header, list)
+  overlay.appendChild(sheet)
   document.body.appendChild(overlay)
 }
 
