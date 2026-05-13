@@ -678,6 +678,7 @@ async function showPicker(title, items, onSelect) {
   const closeBtn = document.createElement('button')
   closeBtn.textContent = '×'
   closeBtn.style.cssText = 'background:none;border:none;cursor:pointer;color:var(--text-2);font-size:20px;line-height:1;padding:4px 8px;touch-action:manipulation;-webkit-tap-highlight-color:transparent'
+  closeBtn.addEventListener('touchend', e => { e.preventDefault(); close() }, { passive: false })
   closeBtn.addEventListener('click', close)
   header.appendChild(closeBtn)
 
@@ -692,6 +693,14 @@ async function showPicker(title, items, onSelect) {
         <div class="picker-label">${it.label}</div>
         ${it.sub ? `<div class="picker-sub">${it.sub}</div>` : ''}
       </div>`
+    let startY = 0
+    row.addEventListener('touchstart', e => { startY = e.touches[0].clientY }, { passive: true })
+    row.addEventListener('touchend', e => {
+      if (Math.abs(e.changedTouches[0].clientY - startY) < 10) {
+        e.preventDefault()
+        onSelect(it); close()
+      }
+    }, { passive: false })
     row.addEventListener('click', () => { onSelect(it); close() })
     list.appendChild(row)
   })
@@ -767,12 +776,24 @@ function bindEvents() {
     })
   }
 
-  // ---- Click handlers ----
-  app.addEventListener('click', async e => {
+  // ---- Click / tap handlers ----
+  // touchend で即座に反応（iOS scroll container の click 遅延を回避）
+  let tapStartY = 0
+  app.addEventListener('touchstart', e => { tapStartY = e.touches[0].clientY }, { passive: true })
+  app.addEventListener('touchend', async e => {
     const btn = e.target.closest('[data-action]')
     if (!btn) return
-    const action = btn.dataset.action
-    await handleAction(action, btn)
+    if (Math.abs(e.changedTouches[0].clientY - tapStartY) < 10) {
+      e.preventDefault()
+      await handleAction(btn.dataset.action, btn)
+    }
+  }, { passive: false })
+  // desktop (mouse) fallback
+  app.addEventListener('click', async e => {
+    if (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents) return
+    const btn = e.target.closest('[data-action]')
+    if (!btn) return
+    await handleAction(btn.dataset.action, btn)
   })
 }
 
