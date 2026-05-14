@@ -707,7 +707,7 @@ async function showPicker(title, items, onSelect, selectedId = null) {
   sheet.append(handle, header, list)
   overlay.appendChild(sheet)
   document.body.appendChild(overlay)
-  if (selectedRow) selectedRow.scrollIntoView({ block: 'center' })
+  if (selectedRow) requestAnimationFrame(() => selectedRow.scrollIntoView({ block: 'nearest' }))
 }
 
 async function showTransactionDetail(id) {
