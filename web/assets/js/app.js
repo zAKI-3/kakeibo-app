@@ -1,5 +1,7 @@
 import * as API from './api.js'
 
+const VERSION = '2026.05.14-1'
+
 // ===== SVG Icons =====
 const ICONS = `<svg style="display:none">
   <defs>
@@ -651,7 +653,7 @@ function renderSettings() {
     </div>
 
     <div style="margin:24px 16px;font-size:10px;color:var(--text-3);text-align:center">
-      kakeibo.app v1.0.0 // Notion + Cloudflare Workers<br>
+      kakeibo.app <span style="color:var(--accent);font-weight:700">${VERSION}</span> // Notion + Cloudflare Workers<br>
       <a href="https://notion.so" target="_blank" style="color:var(--accent)">Notion で詳細管理</a>
     </div>
   `
