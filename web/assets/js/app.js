@@ -1,6 +1,6 @@
 import * as API from './api.js'
 
-const VERSION = '2026.05.14-1'
+const VERSION = '2026.05.15-1'
 
 // ===== SVG Icons =====
 const ICONS = `<svg style="display:none">
