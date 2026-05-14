@@ -658,7 +658,7 @@ function renderSettings() {
 }
 
 // ===== Picker Sheets =====
-async function showPicker(title, items, onSelect) {
+async function showPicker(title, items, onSelect, selectedId = null) {
   const close = () => document.body.removeChild(overlay)
 
   const overlay = document.createElement('div')
@@ -684,23 +684,28 @@ async function showPicker(title, items, onSelect) {
 
   const list = document.createElement('div')
   list.className = 'picker-list'
+  let selectedRow = null
   items.forEach(it => {
+    const isSelected = selectedId && it.id === selectedId
     const row = document.createElement('button')
     row.type = 'button'
-    row.className = 'picker-item'
+    row.className = 'picker-item' + (isSelected ? ' selected' : '')
     row.innerHTML = `
       ${it.emoji ? `<span style="font-size:18px">${it.emoji}</span>` : ''}
-      <div>
+      <div style="flex:1">
         <div class="picker-label">${it.label}</div>
         ${it.sub ? `<div class="picker-sub">${it.sub}</div>` : ''}
-      </div>`
+      </div>
+      ${isSelected ? `<span style="color:var(--accent);font-size:16px">✓</span>` : ''}`
     row.addEventListener('click', () => { onSelect(it); close() })
+    if (isSelected) selectedRow = row
     list.appendChild(row)
   })
 
   sheet.append(handle, header, list)
   overlay.appendChild(sheet)
   document.body.appendChild(overlay)
+  if (selectedRow) selectedRow.scrollIntoView({ block: 'center' })
 }
 
 async function showTransactionDetail(id) {
@@ -937,7 +942,7 @@ async function pickPaymentMethod() {
       expenseState.paymentMethodId = item.id
       expenseState.paymentMethodName = item.label
       render()
-    })
+    }, expenseState.paymentMethodId)
   } catch (e) { showToast(`エラー: ${e.message}`) }
 }
 
@@ -949,7 +954,7 @@ async function pickCard() {
       installState.cardId = item.id
       installState.cardName = item.label
       render()
-    })
+    }, installState.cardId)
   } catch (e) { showToast(`エラー: ${e.message}`) }
 }
 
@@ -957,6 +962,8 @@ async function pickAccount(mode) {
   try {
     const { accounts } = await API.cached('accounts', 300000, API.getAccounts)
     const items = accounts.map(a => ({ label: a.name, sub: `¥${API.formatAmount(a.balance)}`, id: a.id }))
+    const currentAccountId = mode === 'income' ? incomeState.accountId
+      : mode === 'from' ? transferState.fromAccountId : transferState.toAccountId
     showPicker('口座選択', items, item => {
       if (mode === 'income') {
         incomeState.accountId = item.id
@@ -969,7 +976,7 @@ async function pickAccount(mode) {
         transferState.toAccountName = item.label
       }
       render()
-    })
+    }, currentAccountId)
   } catch (e) { showToast(`エラー: ${e.message}`) }
 }
 
@@ -978,6 +985,8 @@ async function pickCategory(type) {
     const level = type === 'income' ? 'large' : 'small'
     const { categories } = await API.cached(`cat-${type}`, 300000, () => API.getCategories(type, level))
     const items = categories.map(c => ({ label: c.name, emoji: c.icon, id: c.id }))
+    const currentCategoryId = currentRoute === 'expense' ? expenseState.categoryId
+      : currentRoute === 'income' ? incomeState.categoryId : installState.categoryId
     showPicker('カテゴリ', items, item => {
       if (currentRoute === 'expense') {
         expenseState.categoryId = item.id
@@ -990,7 +999,7 @@ async function pickCategory(type) {
         installState.categoryName = item.label
       }
       render()
-    })
+    }, currentCategoryId)
   } catch (e) { showToast(`エラー: ${e.message}`) }
 }
 

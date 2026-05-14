@@ -584,7 +584,7 @@ textarea.field-input {
   -webkit-tap-highlight-color: transparent;
 }
 .picker-item:active { background: var(--surface-1); }
-.picker-item.selected { color: var(--accent); }
+.picker-item.selected { color: var(--accent); background: rgba(0, 230, 118, 0.06); }
 .picker-label { font-size: 13px; font-weight: 600; flex: 1; }
 .picker-sub { font-size: 10px; color: var(--text-3); margin-top: 2px; }
 
