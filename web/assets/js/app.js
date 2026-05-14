@@ -685,7 +685,8 @@ async function showPicker(title, items, onSelect) {
   const list = document.createElement('div')
   list.className = 'picker-list'
   items.forEach(it => {
-    const row = document.createElement('div')
+    const row = document.createElement('button')
+    row.type = 'button'
     row.className = 'picker-item'
     row.innerHTML = `
       ${it.emoji ? `<span style="font-size:18px">${it.emoji}</span>` : ''}
@@ -693,14 +694,6 @@ async function showPicker(title, items, onSelect) {
         <div class="picker-label">${it.label}</div>
         ${it.sub ? `<div class="picker-sub">${it.sub}</div>` : ''}
       </div>`
-    let startY = 0
-    row.addEventListener('touchstart', e => { startY = e.touches[0].clientY }, { passive: true })
-    row.addEventListener('touchend', e => {
-      if (Math.abs(e.changedTouches[0].clientY - startY) < 10) {
-        e.preventDefault()
-        onSelect(it); close()
-      }
-    }, { passive: false })
     row.addEventListener('click', () => { onSelect(it); close() })
     list.appendChild(row)
   })
@@ -776,21 +769,8 @@ function bindEvents() {
     })
   }
 
-  // ---- Click / tap handlers ----
-  // touchend で即座に反応（iOS scroll container の click 遅延を回避）
-  let tapStartY = 0
-  app.addEventListener('touchstart', e => { tapStartY = e.touches[0].clientY }, { passive: true })
-  app.addEventListener('touchend', async e => {
-    const btn = e.target.closest('[data-action]')
-    if (!btn) return
-    if (Math.abs(e.changedTouches[0].clientY - tapStartY) < 10) {
-      e.preventDefault()
-      await handleAction(btn.dataset.action, btn)
-    }
-  }, { passive: false })
-  // desktop (mouse) fallback
+  // ---- Click handlers ----
   app.addEventListener('click', async e => {
-    if (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents) return
     const btn = e.target.closest('[data-action]')
     if (!btn) return
     await handleAction(btn.dataset.action, btn)

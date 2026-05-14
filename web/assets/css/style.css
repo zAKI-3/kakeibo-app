@@ -569,8 +569,15 @@ textarea.field-input {
 /* ===== Picker Sheet ===== */
 .picker-list { padding: 0 0 32px; }
 .picker-item {
+  width: 100%;
   padding: 14px 20px;
+  border: none;
   border-bottom: 1px solid var(--border-dim);
+  background: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  text-align: left;
   cursor: pointer;
   display: flex; align-items: center; gap: 12px;
   touch-action: manipulation;
